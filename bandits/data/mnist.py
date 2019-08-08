@@ -1,7 +1,7 @@
 import torch, torchvision
 import torchvision.datasets as datasets
 import numpy as np
-
+import vae
 
 def get_mnist_data():
     return datasets.MNIST(root='./data', train=True,
@@ -30,6 +30,23 @@ def get_raw_features():
 
 def get_vae_features():
     """
-    TODO
+    Returns list of encoded vectors
     """
-    pass
+    d = torch.load("model")
+    model = vae.VAE()
+    model.load_state_dict(d['model_state_dict'])
+
+    mnist = get_mnist_data()
+
+    def encode(im):
+        tensor = torchvision.transforms.ToTensor()(im)
+        flat = tensor.flatten()
+        mu, logvar = model.encode(flat)
+        latent = model.reparameterize(mu, logvar)
+        return latent
+
+    res = []
+    for im, _ in mnist:
+        res.append(encode(im))
+
+    return res
