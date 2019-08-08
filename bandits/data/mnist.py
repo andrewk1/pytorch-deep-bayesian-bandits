@@ -13,8 +13,12 @@ def construct_dataset_from_features(features):
       dataset: matrix with n rows: (context, label)
       opt_vals: vector of expected optimal (reward, action) for each context
     """
+    pass
 
 def get_raw_features():
+    """
+    Returns list of (context, label) pairs
+    """
     res = []
     mnist = get_mnist_data()
     for im, label in mnist:
