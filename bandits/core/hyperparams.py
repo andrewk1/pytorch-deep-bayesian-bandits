@@ -4,7 +4,7 @@ class HyperParams(object):
                  batch_size, activate_decay, initial_lr, max_grad_norm,
                  show_training, freq_summary, buffer_s, initial_pulls, reset_lr,
                  lr_decay_rate, training_freq, training_freq_network, training_epochs,
-                 a0, b0, lambda_prior, keep_prob, global_step):
+                 a0, b0, lambda_prior, keep_prob, global_step, base_lr, mode):
         self.num_actions = num_actions
         self.context_dim = context_dim
         self.init_scale = init_scale
@@ -12,6 +12,7 @@ class HyperParams(object):
         self.batch_size = batch_size
         self.activate_decay = activate_decay
         self.initial_lr = initial_lr
+        self.base_lr = base_lr
         self.max_grad_norm = max_grad_norm
         self.show_training = show_training
         self.freq_summary = freq_summary
@@ -27,3 +28,4 @@ class HyperParams(object):
         self.lambda_prior = lambda_prior
         self.keep_prob = keep_prob
         self.global_step = global_step
+        self.mode = mode

@@ -18,7 +18,16 @@ def main():
     context_dim = features.shape[1]
     num_actions = 10
 
+
+    init_lrs = [0.001, 0.0025, 0.005, 0.01]
+    base_lrs = [0.0005, 0.001]
+    modes = ["triangular", "triangular2", "exp_range"]
+    batch_sizes = [32, 128, 512]
+    layer_sizes = [[50, 50], [100, 100], [100]]
     # hyperparams
+    for init_lr in init_lrs:
+        for base_lrs in base_lrs:
+            for mode in modes
     hp_nlinear = HyperParams(num_actions=num_actions,
                              context_dim=context_dim,
                              init_scale=0.3,
@@ -40,7 +49,8 @@ def main():
                              b0=6,
                              lambda_prior=0.25,
                              keep_prob=1.0,
-                             global_step=1)
+                             global_step=1,
+                             mode=mode)
 
     algos = [NeuralLinearPosteriorSampling('NeuralLinear', hp_nlinear)]
 

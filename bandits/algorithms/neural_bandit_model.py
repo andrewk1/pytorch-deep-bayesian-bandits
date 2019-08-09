@@ -49,8 +49,8 @@ class NeuralBanditModel():
         # TODO: This isn't 1-1 the same
         # self.scheduler = optim.lr_scheduler.StepLR(self.optimizer, gamma=0.25,
         #                                            step_size=self.hparams.global_step)
-        self.scheduler = optim.lr_scheduler.CyclicLR(self.optimizer, base_lr=0.001,
-                                                     max_lr=self.hparams.initial_lr)
+        self.scheduler = optim.lr_scheduler.CyclicLR(self.optimizer, base_lr=self.hparams.base_lr,
+                                                     max_lr=self.hparams.initial_lr, mode=self.hparams.mode)
 
     def train(self, data, num_steps):
         print("Training {} for {} steps...".format(self.name, num_steps))
