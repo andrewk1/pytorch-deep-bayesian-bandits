@@ -7,7 +7,7 @@ from __future__ import print_function
 import torch
 from torch import nn
 from torch import optim
-
+torch.set_printoptions(profile='full')
 
 class NeuralBanditModel():
     """Implements a neural network for bandit problems."""
@@ -64,9 +64,11 @@ class NeuralBanditModel():
             # Compute loss
             loss = self.lossCriterion(y_pred, y)
             loss = loss * w  # This pulls out loss only on true y
-            cost = loss.mean() / self.hparams.batch_size
+            cost = loss.sum() / self.hparams.batch_size
             cost.backward()
             self.optimizer.step()
+
+            print('cost', cost)
 
         # Anneal LR
         # self.scheduler.step()

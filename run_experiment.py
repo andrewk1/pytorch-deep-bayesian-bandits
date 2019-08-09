@@ -4,7 +4,9 @@ from bandits.core.hyperparams import HyperParams
 from bandits.core.contextual_bandit import run_contextual_bandit
 import numpy as np
 import torch
+import sys
 
+np.set_printoptions(threshold=sys.maxsize)
 
 def main():
     data_type = 'mnist'
