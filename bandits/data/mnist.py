@@ -113,5 +113,10 @@ def get_vae_features():
 
     res = []
     for im, label in mnist:
+        encoded = encode(im).detach().numpy()
         res.append((encode(im).detach().numpy(), label))
+
     return res
+
+def get_cache_vae_features():
+    return np.load("vae_features.npy",allow_pickle=True)
