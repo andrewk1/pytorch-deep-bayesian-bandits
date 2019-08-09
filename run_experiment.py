@@ -39,7 +39,7 @@ def main():
                              a0=6,
                              b0=6,
                              lambda_prior=0.25,
-                             keep_prob=0.5,
+                             keep_prob=1.0,
                              global_step=1)
 
     algos = [NeuralLinearPosteriorSampling('NeuralLinear', hp_nlinear)]

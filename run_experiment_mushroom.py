@@ -58,7 +58,7 @@ def main():
                              layer_sizes=[50],
                              batch_size=512,
                              activate_decay=True,
-                             initial_lr=0.1,
+                             initial_lr=0.005,
                              max_grad_norm=5.0,
                              show_training=False,
                              freq_summary=1000,
@@ -72,8 +72,8 @@ def main():
                              a0=6,
                              b0=6,
                              lambda_prior=0.25,
-                             keep_prob=0.5,
-                             global_step=1)
+                             keep_prob=1.0,
+                             global_step=50)
 
     algos = [NeuralLinearPosteriorSampling('NeuralLinear', hp_nlinear)]
 
@@ -83,6 +83,7 @@ def main():
     print(context_dim, num_actions)
     results = run_contextual_bandit(context_dim, num_actions, dataset, algos)
     _, h_rewards = results
+    np.save("mushroom_rewards.npy", h_rewards)
 
     display_results(algos, opt_rewards, opt_actions, h_rewards, t_init, data_type)
 

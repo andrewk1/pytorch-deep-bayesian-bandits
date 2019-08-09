@@ -23,7 +23,7 @@ class NeuralBanditModel():
         layer = [nn.Linear(input_dim, output_dim)]
         torch.nn.init.uniform_(layer[0].weight, -0.3, 0.3)
         if not last: layer += [nn.ReLU()]
-        layer += [LayerNorm(output_dim)]
+        # layer += [LayerNorm(output_dim)]
         if self.hparams.keep_prob < 1.:
             layer.append(nn.Dropout(p=(1 - self.hparams.keep_prob)))
         return layer
@@ -43,12 +43,14 @@ class NeuralBanditModel():
         self.lossCriterion = nn.MSELoss(reduction='none')
         self.optimizer = optim.RMSprop(self.net.parameters(),
                                        lr=self.hparams.initial_lr)
-        # self.assign_lr()
+        self.assign_lr()
 
     def assign_lr(self):
         # TODO: This isn't 1-1 the same
-        self.scheduler = optim.lr_scheduler.StepLR(self.optimizer,
-                                                   self.hparams.global_step)
+        # self.scheduler = optim.lr_scheduler.StepLR(self.optimizer, gamma=0.25,
+        #                                            step_size=self.hparams.global_step)
+        self.scheduler = optim.lr_scheduler.CyclicLR(self.optimizer, base_lr=0.001,
+                                                     max_lr=self.hparams.initial_lr)
 
     def train(self, data, num_steps):
         print("Training {} for {} steps...".format(self.name, num_steps))
@@ -68,12 +70,13 @@ class NeuralBanditModel():
             loss = loss * w  # This pulls out loss only on true y
             cost = loss.sum() / self.hparams.batch_size
             cost.backward()
+            nn.utils.clip_grad_norm_(self.net.parameters(), self.hparams.max_grad_norm)
             self.optimizer.step()
 
             print('cost', cost)
 
         # Anneal LR
-        # self.scheduler.step()
+        self.scheduler.step()
         self.times_trained += 1
 
     def forward(self, x):

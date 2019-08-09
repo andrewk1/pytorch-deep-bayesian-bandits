@@ -114,8 +114,8 @@ class NeuralLinearPosteriorSampling():
         # Retrain the network on the original data (data_h)
         if self.t % self.update_freq_nn == 0:
 
-            # if self.hparams.reset_lr:
-            #     self.bnn.assign_lr()
+            if self.hparams.reset_lr:
+                self.bnn.assign_lr()
             self.bnn.train(self.data_h, self.num_epochs)
 
             # Update the latent representation of every datapoint collected so far
