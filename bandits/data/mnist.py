@@ -113,7 +113,6 @@ def get_vae_features():
 
     res = []
     for im, label in mnist:
-        encoded = encode(im).detach().numpy()
         res.append((encode(im).detach().numpy(), label))
 
     return res
