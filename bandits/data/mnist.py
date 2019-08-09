@@ -5,7 +5,7 @@ import cv2
 import sklearn
 from sklearn.decomposition import PCA
 import random
-import vae
+from bandits.data.vae import VAE
 
 def get_mnist_data():
     return datasets.MNIST(root='./data', train=True,
@@ -98,8 +98,8 @@ def get_vae_features():
     """
     Returns list of encoded vectors
     """
-    d = torch.load("model")
-    model = vae.VAE()
+    d = torch.load("bandits/data/model")
+    model = VAE()
     model.load_state_dict(d['model_state_dict'])
 
     mnist = get_mnist_data()

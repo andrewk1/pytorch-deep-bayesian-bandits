@@ -54,7 +54,6 @@ class ContextualDataset(object):
       action: Integer between 0 and k-1 representing the chosen arm.
       reward: Real number representing the reward for the (context, action).
     """
-
     if self.intercept:
       c = np.array(context[:])
       c = np.append(c, 1.0).reshape((1, self.context_dim + 1))
