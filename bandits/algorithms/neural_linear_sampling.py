@@ -5,6 +5,7 @@ from __future__ import division
 from __future__ import print_function
 
 import numpy as np
+import torch
 from scipy.stats import invgamma
 
 from bandits.core.contextual_dataset import ContextualDataset
@@ -92,7 +93,7 @@ class NeuralLinearPosteriorSampling():
 
         # Compute last-layer representation for the current context
         c = context.reshape((1, self.hparams.context_dim))
-        z_context = self.bnn.forward(c)
+        z_context = self.bnn.forward_z(c)
 
         # Apply Thompson Sampling to last-layer representation
         vals = [
@@ -107,18 +108,20 @@ class NeuralLinearPosteriorSampling():
         self.t += 1
         self.data_h.add(context, action, reward)
         c = context.reshape((1, self.hparams.context_dim))
-        z_context = self.bnn.forward(c)
+        print('c', c)
+        z_context = self.bnn.forward_z(c)
+        print('zcontextf', z_context)
         self.latent_h.add(z_context, action, reward)
 
         # Retrain the network on the original data (data_h)
         if self.t % self.update_freq_nn == 0:
 
-            if self.hparams.reset_lr:
-                self.bnn.assign_lr()
+            # if self.hparams.reset_lr:
+            #     self.bnn.assign_lr()
             self.bnn.train(self.data_h, self.num_epochs)
 
             # Update the latent representation of every datapoint collected so far
-            new_z = self.bnn.forward(self.data_h.contexts)
+            new_z = self.bnn.forward_z(self.data_h.contexts)
             self.latent_h.replace_data(contexts=new_z)
 
         # Update the Bayesian Linear Regression

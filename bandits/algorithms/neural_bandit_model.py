@@ -29,16 +29,18 @@ class NeuralBanditModel():
         self.net = []
         input_dim = self.hparams.context_dim
 
-        for output_dim in self.hparams["layer_sizes"]:
+        for output_dim in self.hparams.layer_sizes:
             self.net += self.build_layer(input_dim, output_dim)
             input_dim = output_dim
+
+        self.fc_nn = nn.Sequential(*self.net)
 
         self.net += self.build_layer(input_dim, self.hparams.num_actions)
         self.net = nn.Sequential(*self.net)
         self.lossCriterion = nn.MSELoss(reduction='none')
         self.optimizer = optim.RMSprop(self.net.parameters(),
                                        lr=self.hparams.initial_lr)
-        self.assign_lr()
+        # self.assign_lr()
 
     def assign_lr(self):
         # TODO: This isn't 1-1 the same
@@ -53,6 +55,9 @@ class NeuralBanditModel():
 
             # Get data, perform forward prop
             x, y, w = data.get_batch_with_weights(self.hparams.batch_size)
+            x = torch.Tensor(x)
+            y = torch.Tensor(y)
+            w = torch.Tensor(w)
             y_pred = self.net.forward(x)
 
             # Compute loss
@@ -63,8 +68,11 @@ class NeuralBanditModel():
             self.optimizer.step()
 
         # Anneal LR
-        self.scheduler.step()
+        # self.scheduler.step()
         self.times_trained += 1
 
     def forward(self, x):
-        return self.net.forward(x)
+        return self.net.forward(torch.Tensor(x)).detach().numpy()
+
+    def forward_z(self, x):
+        return self.fc_nn.forward(torch.Tensor(x)).detach().numpy()
