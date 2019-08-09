@@ -22,8 +22,8 @@ def main():
     hp_nlinear = HyperParams(num_actions=num_actions,
                              context_dim=context_dim,
                              init_scale=0.3,
-                             layer_sizes=[50],
-                             batch_size=512,
+                             layer_sizes=[50, 50],
+                             batch_size=32,
                              activate_decay=True,
                              initial_lr=0.1,
                              max_grad_norm=5.0,
@@ -47,6 +47,8 @@ def main():
     # run contextual bandit experiment
     print(context_dim, num_actions)
     results = run_contextual_bandit(context_dim, num_actions, dataset, algos)
+    actions, rewards = results
+    np.save("results.npy", rewards)
 
 
 if __name__ == '__main__':

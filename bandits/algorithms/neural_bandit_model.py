@@ -7,6 +7,7 @@ from __future__ import print_function
 import torch
 from torch import nn
 from torch import optim
+from torch.nn.modules.normalization import LayerNorm
 torch.set_printoptions(profile='full')
 
 class NeuralBanditModel():
@@ -22,7 +23,7 @@ class NeuralBanditModel():
         layer = [nn.Linear(input_dim, output_dim)]
         torch.nn.init.uniform_(layer[0].weight, -0.3, 0.3)
         if not last: layer += [nn.ReLU()]
-        # TODO: Maybe add layer_norm
+        layer += [LayerNorm(output_dim)]
         if self.hparams.keep_prob < 1.:
             layer.append(nn.Dropout(p=(1 - self.hparams.keep_prob)))
         return layer
