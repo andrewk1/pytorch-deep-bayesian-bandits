@@ -17,9 +17,10 @@ class NeuralBanditModel():
         self.times_trained = 0
         self.build_model()
 
-    def build_layer(self, input_dim, output_dim):
+    def build_layer(self, input_dim, output_dim, last=False):
         """Builds a fc layer with num_inputs and num_outputs"""
-        layer = [nn.Linear(input_dim, output_dim), nn.ReLU()]
+        layer = [nn.Linear(input_dim, output_dim)]
+        if not last: layer += [nn.ReLU()]
         # TODO: Maybe add layer_norm
         if self.hparams.keep_prob < 1.:
             layer.append(nn.Dropout(p=(1 - self.hparams.keep_prob)))
@@ -35,7 +36,7 @@ class NeuralBanditModel():
 
         self.fc_nn = nn.Sequential(*self.net)
 
-        self.net += self.build_layer(input_dim, self.hparams.num_actions)
+        self.net += self.build_layer(input_dim, self.hparams.num_actions, True)
         self.net = nn.Sequential(*self.net)
         self.lossCriterion = nn.MSELoss(reduction='none')
         self.optimizer = optim.RMSprop(self.net.parameters(),
