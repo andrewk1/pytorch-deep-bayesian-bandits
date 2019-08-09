@@ -70,7 +70,6 @@ def get_vae_features():
         return latent
 
     res = []
-    for im, _ in mnist:
-        res.append(encode(im))
-
+    for im, label in mnist:
+        res.append((encode(im).detach().numpy(), label))
     return res
