@@ -108,9 +108,7 @@ class NeuralLinearPosteriorSampling():
         self.t += 1
         self.data_h.add(context, action, reward)
         c = context.reshape((1, self.hparams.context_dim))
-        print('c', c)
         z_context = self.bnn.forward_z(c)
-        print('zcontextf', z_context)
         self.latent_h.add(z_context, action, reward)
 
         # Retrain the network on the original data (data_h)

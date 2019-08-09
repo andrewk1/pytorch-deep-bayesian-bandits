@@ -54,7 +54,6 @@ def run_contextual_bandit(context_dim, num_actions, dataset, algos):
     rewards = [cmab.reward(i, action) for action in actions]
 
     for j, a in enumerate(algos):
-      print(j, context)
       a.update(context, actions[j], rewards[j])
 
     h_actions = np.vstack((h_actions, np.array(actions)))
