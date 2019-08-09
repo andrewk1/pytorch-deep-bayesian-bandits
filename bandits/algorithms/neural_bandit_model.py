@@ -20,6 +20,7 @@ class NeuralBanditModel():
     def build_layer(self, input_dim, output_dim, last=False):
         """Builds a fc layer with num_inputs and num_outputs"""
         layer = [nn.Linear(input_dim, output_dim)]
+        torch.nn.init.uniform_(layer[0], -0.3, 0.3)
         if not last: layer += [nn.ReLU()]
         # TODO: Maybe add layer_norm
         if self.hparams.keep_prob < 1.:
