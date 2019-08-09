@@ -31,7 +31,10 @@ def construct_dataset_from_features(data,
     sstd = safe_std(np.std(features, axis=0, keepdims=True)[0, :])
     features= ((features - np.mean(features, axis=0, keepdims=True)) / sstd)
 
-    rewards = np.zeros((num_contexts, 10))
+    # TODO: THIS IS ONLY FOR NLP
+    labels = labels - 1
+
+    rewards = np.zeros((num_contexts, 2))
     rewards[np.arange(num_contexts), labels] = 1.0
 
     return features, rewards, (np.ones(num_contexts), labels)
