@@ -1,6 +1,9 @@
 import torch, torchvision
 import torchvision.datasets as datasets
 import numpy as np
+import cv2
+import sklearn
+from sklearn.decomposition import PCA
 import random
 import vae
 
@@ -51,7 +54,46 @@ def get_raw_features():
         res.append((feature_vec, label))
     return res
 
+def get_PCA_features():
+    """
+    TODO
+    :return:
+    """
+    res = get_raw_features()
+    dataset = [feats for feats,label in res]
+    scaler = sklearn.preprocessing.StandardScaler()
+    scaler.fit(dataset)
+    dataset = scaler.transform(dataset)
+    # .40 yields 23 components
+    pca = PCA(n_components=20)
+    pca.fit(dataset)
+    dataset_pca = pca.transform(dataset)
+    print(pca.n_components_)
+    return dataset_pca
 
+def get_bovw_features():
+    """
+    TODO
+    :return:
+    """
+    def get_SIFT_feature(pic):
+        sift = cv2.xfeatures2d.SIFT_create()
+        pic = (pic-np.min(pic))*255/np.max(pic)
+        pic = pic.astype(np.uint8)
+        kp, desc = sift.detectAndCompute(pic,None)
+        return kp,desc
+    """
+    dataset= []
+    mnist = get_mnist_data()
+    for im, label in mnist:
+        tensor = torchvision.transforms.ToTensor()(im)
+        imgarray = tensor.numpy()
+        imgarray = imgarray[0]
+        img_kp, img_desc = get_SIFT_feature(imgarray)
+        print(img_kp[0])
+        print(img_desc)
+        dataset.append(img_kp,label)
+    """
 def get_vae_features():
     """
     Returns list of encoded vectors
