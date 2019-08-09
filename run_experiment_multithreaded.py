@@ -12,11 +12,11 @@ np.set_printoptions(threshold=sys.maxsize)
 def main():
     global num_processes, mode, dataset, features, rewards, context_dim, num_actions, combos
     data_type = 'mnist'
-    num_processes = 4
+    num_processes = 6
 
     vae_data = get_vae_features()
     features, rewards, opt_vals = construct_dataset_from_features(vae_data)
-    dataset = np.hstack((features, rewards))[:100]
+    dataset = np.hstack((features, rewards))
 
     context_dim = features.shape[1]
     num_actions = 10
